@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: student-attendance
+    ports:
+      - "8080:8080"
+    volumes:
+      - attendance_data:/app/data
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/attendance_db
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - attendance_network
+    restart: unless-stopped
+
+volumes:
+  attendance_data:
+    driver: local
+
+networks:
+  attendance_network:
+    driver: bridge
