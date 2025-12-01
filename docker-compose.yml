@@ -1,6 +1,26 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: attendance-postgres
+    environment:
+      POSTGRES_DB: attendance_db
+      POSTGRES_USER: attendance_user
+      POSTGRES_PASSWORD: attendance_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - attendance_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U attendance_user -d attendance_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build:
       context: .
@@ -8,18 +28,22 @@ services:
     container_name: student-attendance
     ports:
       - "8080:8080"
-    volumes:
-      - attendance_data:/app/data
     environment:
       - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:h2:file:/app/data/attendance_db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/attendance_db
+      - SPRING_DATASOURCE_USERNAME=attendance_user
+      - SPRING_DATASOURCE_PASSWORD=attendance_password
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
     networks:
       - attendance_network
+    depends_on:
+      postgres:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
-  attendance_data:
+  postgres_data:
     driver: local
 
 networks:
