@@ -10,21 +10,21 @@ public class User {
 
     @Id //Primary Key
     @GeneratedValue(strategy = GenerationType. IDENTITY)
-        private Long id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-        private String email;
+    private String email;
 
     @Column(nullable = false)
-        private String password;
-        private String firstName;
-        private String lastName;
+    private String password;
+    private String firstName;
+    private String lastName;
 
     @Column(nullable = false)
-        private String role; //Student, Dozent oder Admin
+    private String role; //Student, Dozent oder Admin
 
     @Column(nullable = false)
-        private Long matriculationNumber;
+    private Long matriculationNumber;
 
     // Konstruktor
     public User() {}
@@ -74,10 +74,10 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-    public String getMatriculationNumber() {
+    public Long getMatriculationNumber() {
         return matriculationNumber;
     }
-    public void setMatriculationNumber(String matriculationNumber) {
+    public void setMatriculationNumber(Long matriculationNumber) {
         this.matriculationNumber = matriculationNumber;
     }
 
