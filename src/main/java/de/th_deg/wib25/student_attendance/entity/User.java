@@ -1,9 +1,14 @@
 package de.th_deg.wib25.student_attendance.entity;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "user")
 public class User {
 
-    @Id
-
+    @Id //Primary Key
     @GeneratedValue(strategy = GenerationType. IDENTITY)
         private Long id;
 
@@ -16,36 +21,75 @@ public class User {
         private String lastName;
 
     @Column(nullable = false)
-        private String role; // "PROFESSOR" oder "STUDENT"
+        private String role; //Student, Dozent oder Admin
 
+    @Column(nullable = false)
+        private Long matriculationNumber;
 
-    // Constructors
+    // Konstruktor
     public User() {}
 
+    public User(String email, String password, String firstName, String lastName, String role) {
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+    }
 
-    // Getters & Setters
+    // Getters und Setters
     public Long getId() {
-        return id; }
+        return id;
+    }
     public void setId(Long id) {
-        this.id = id; }
+        this.id = id;
+    }
     public String getEmail() {
-        return email; }
+        return email;
+    }
     public void setEmail(String email) {
-        this.email = email; }
+        this.email = email;
+    }
     public String getPassword() {
-        return password; }
+        return password;
+    }
     public void setPassword(String password) {
-        this.password = password; }
+        this.password = password;
+    }
     public String getFirstName() {
-        return firstName; }
+        return firstName;
+    }
     public void setFirstName(String firstName) {
-        this.firstName = firstName; }
+        this.firstName = firstName;
+    }
     public String getLastName() {
-        return lastName; }
+        return lastName;
+    }
     public void setLastName(String lastName) {
-        this.lastName = lastName; }
+        this.lastName = lastName;
+    }
     public String getRole() {
-        return role; }
+        return role;
+    }
     public void setRole(String role) {
-        this.role = role; }
+        this.role = role;
+    }
+    public String getMatriculationNumber() {
+        return matriculationNumber;
+    }
+    public void setMatriculationNumber(String matriculationNumber) {
+        this.matriculationNumber = matriculationNumber;
+    }
+
+
+    //Hilfsmethoden
+    public boolean isProfessor() {
+        return "PROFESSOR".equals(this.role);
+    }
+    public boolean isStudent() {
+        return "STUDENT".equals(this.role);
+    }
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
