@@ -10,17 +10,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
- * Controller für Kurslisten, Kursdetails und einfache Teilnehmerverwaltung.
+ * Controller für Kurslisten, Kursdetails und Teilnehmerverwaltung.
  *
  * Endpunkte:
- *  - GET  /courses                -> Kursübersicht (Liste)
- *  - GET  /courses/{id}           -> Kursdetail mit Teilnehmerliste, Suche, Dropdown
- *  - POST /courses/{id}/students/add    -> Student zum Kurs hinzufügen
- *  - POST /courses/{id}/students/remove -> Student aus Kurs entfernen
+ *  - GET  /courses                     -> Kursübersicht (immer hartkodierte Demo-Kurse)
+ *  - GET  /courses/{id}                -> Kursdetail mit Teilnehmerliste, Suche, Dropdown
+ *  - POST /courses/{id}/students/add   -> Student zum Kurs hinzufügen
+ *  - POST /courses/{id}/students/remove-> Student aus Kurs entfernen
  */
 @Controller
 @RequestMapping("/courses")
@@ -40,46 +39,29 @@ public class CourseController {
 
     /**
      * Kursübersicht
-     *
-     * Unterstützt sowohl /courses als auch /courses/
-     * Lädt Kurse aus der DB. Falls du noch keine Kursdaten hast, kannst du
-     * temporär Dummy-Daten verwenden (siehe auskommentierten Block).
+     * Zeigt IMMER die hartkodierten Demo-Kurse,
+     * damit sie unabhängig vom DB-Zustand sichtbar sind.
      */
     @GetMapping({"", "/"})
     public String listCourses(Model model) {
-        // Variante: echte Kurse aus DB
-        List<Course> courses = courseRepository.findAll().stream()
-                .sorted(Comparator.comparing(Course::getName, String.CASE_INSENSITIVE_ORDER))
-                .toList();
-        model.addAttribute("courses", courses);
-        return "courses"; // -> templates/courses.html
-
-        /*
-        // TEMP-Variante mit Dummy-Daten (falls DB noch leer ist):
         List<CourseDto> courses = List.of(
-            new CourseDto(1L, "Software Engineering", "WS 25/26"),
-            new CourseDto(2L, "Datenbanken", "WS 25/26")
+                new CourseDto(1L, "Software Engineering", "WS 25/26"),
+                new CourseDto(2L, "Datenbanken", "WS 25/26"),
+                // ggf. weitere Demo-Kurse hier ergänzen
+                new CourseDto(3L, "Wissenschaftliches Arbeiten", "WS 25/26")
         );
         model.addAttribute("courses", courses);
-        return "courses";
-        */
+        return "courses"; // -> templates/courses.html (nutzt CourseDto-Felder)
     }
 
     /**
      * Kursdetails + Teilnehmerverwaltung (Anzeige)
-     *
-     * Zeigt:
-     *  - Kursname
-     *  - Teilnehmerliste
-     *  - Teilnehmerzahl
-     *  - Suche nach Student-Usern (q)
-     *  - Dropdown mit Kandidaten (alle STUDENT-User abzüglich bereits zugeordneter)
      */
     @GetMapping("/{id}")
     public String courseDetail(@PathVariable Long id,
                                @RequestParam(value = "q", required = false) String q,
                                Model model) {
-        // Kurs laden (optional: Fehlerseite, hier vereinfachend "Test Kurs" wenn nicht gefunden)
+        // Kurs aus DB laden; wenn nicht vorhanden, setze nur Name auf "Test Kurs"
         Course course = courseRepository.findById(id).orElse(null);
 
         model.addAttribute("courseId", id);
@@ -137,7 +119,7 @@ public class CourseController {
     }
 
     /**
-     * Nur für die (auskommentierte) Dummy-Listen-Variante.
+     * Kursliste-DTO (hartkodierte Demoobjekte)
      */
     public record CourseDto(Long id, String name, String term) {}
 }
