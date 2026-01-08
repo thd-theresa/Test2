@@ -25,7 +25,7 @@ public class Course {
 
     // Professor, der den Kurs leitet
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id", nullable = true) //hier auf True geändert, um auch Kurse testweise ohne Prof anzulegen
     private User professor;
 
     // Studenten im Kurs (Many-to-Many)
