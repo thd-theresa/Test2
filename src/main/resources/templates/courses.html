@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Kursübersicht</title>
+</head>
+
+<body>
+<h1>Deine Kurse</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Kursname</th>
+        <th>Semester</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="c : ${courses}">
+        <td th:text="${c.id}">1</td>
+        <td th:text="${c.name}">Beispielkurs</td>
+        <td th:text="${c.term}">WS 25/26</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
