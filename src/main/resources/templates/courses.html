@@ -113,10 +113,9 @@
     <tr th:each="c : ${courses}" th: onclick="window.location.href='/courses/detail? id=${c.id}&name=${c. name}'">
         <td th:text="${c.id}">1</td>
         <td>
-            <a th:href="@{/courses/detail(id=${c.id}, name=${c. name})}"
-               th:text="${c.name}"
-               class="course-link"
-               onclick="event.stopPropagation()">Beispielkurs</a>
+            <a th:href="@{/courses/{id}(id=${c.id})}"
+               th:text="${c. name}"
+               class="course-link">Beispielkurs</a>
         </td>
         <td th:text="${c.term}">WS 25/26</td>
     </tr>
