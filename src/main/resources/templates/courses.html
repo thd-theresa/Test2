@@ -110,7 +110,7 @@
     </thead>
     <tbody>
     <!-- Dynamische Kurse aus dem Backend -->
-    <tr th:each="c : ${courses}" th: onclick="window.location.href='/courses/detail? id=${c.id}&name=${c. name}'">
+    <tr th:each="c : ${courses}">
         <td th:text="${c.id}">1</td>
         <td>
             <a th:href="@{/courses/{id}(id=${c.id})}"
