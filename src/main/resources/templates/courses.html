@@ -4,12 +4,103 @@
 <head>
     <meta charset="UTF-8">
     <title>Kursübersicht</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding:  20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        . button-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius:  5px;
+            cursor:  pointer;
+            font-size:  14px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button. secondary {
+            background-color: #6c757d;
+        }
+
+        button.secondary:hover {
+            background-color: #545b62;
+        }
+
+        table {
+            width: 100%;
+            background-color: white;
+            border-collapse: collapse;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        thead {
+            background-color: #007bff;
+            color:  white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        . course-link {
+            color: #007bff;
+            text-decoration:  none;
+            font-weight: 500;
+        }
+
+        . course-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 
 <body>
 <h1>Deine Kurse</h1>
 
-<table border="1">
+<div class="button-container">
+    <button onclick="neuerKurs()">Kurs anlegen</button>
+    <button class="secondary" onclick="kursSortieren()">Kurse sortieren</button>
+</div>
+
+<table>
     <thead>
     <tr>
         <th>ID</th>
@@ -18,13 +109,36 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="c : ${courses}">
+    <!-- Hardcodierter Kurs -->
+    <tr onclick="window.location.href='kurs-detail.html? id=999&name=Software%20Engineering'">
+        <td>999</td>
+        <td><a href="kurs-detail.html? id=999&name=Software%20Engineering" class="course-link">Software Engineering</a></td>
+        <td>WS 25/26</td>
+    </tr>
+
+    <!-- Dynamische Kurse aus dem Backend -->
+    <tr th:each="c : ${courses}" th:onclick="'window.location.href=\'kurs-detail.html? id=' + ${c.id} + '&name=' + ${c.name} + '\''">
         <td th:text="${c.id}">1</td>
-        <td th:text="${c.name}">Beispielkurs</td>
+        <td>
+            <a th:href="'kurs-detail.html?id=' + ${c.id} + '&name=' + ${c. name}"
+               th:text="${c.name}"
+               class="course-link">Beispielkurs</a>
+        </td>
         <td th:text="${c.term}">WS 25/26</td>
     </tr>
     </tbody>
 </table>
 
+<script>
+    function neuerKurs() {
+        // Placeholder - hier später Logik zum Anlegen eines Kurses
+        alert('Funktion "Kurs anlegen" wird noch implementiert');
+    }
+
+    function kursSortieren() {
+        // Placeholder - hier später Sortierlogik
+        alert('Funktion "Kurse sortieren" wird noch implementiert');
+    }
+</script>
 </body>
 </html>

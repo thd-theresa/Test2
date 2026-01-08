@@ -1,0 +1,53 @@
+<div class="course-content">
+    <div class="section">
+        <h2>Kursinformationen</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Semester</div>
+                <div class="info-value">WS 25/26</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Dozent</div>
+                <div class="info-value" class="placeholder-text">Noch nicht zugewiesen</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Teilnehmerzahl</div>
+                <div class="info-value" class="placeholder-text">-</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Credits</div>
+                <div class="info-value">6 ECTS</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Beschreibung</h2>
+        <p class="placeholder-text">
+            Hier könnte die Kursbeschreibung stehen. In diesem Kurs werden die Grundlagen
+            des Software Engineerings vermittelt, einschließlich Anforderungsanalyse, Design,
+            Implementierung, Testing und Wartung von Softwaresystemen.
+        </p>
+    </div>
+
+    <div class="section">
+        <h2>Materialien</h2>
+        <p class="placeholder-text">Noch keine Materialien verfügbar</p>
+    </div>
+</div>
+
+<script>
+    // URL-Parameter auslesen und anzeigen
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseId = urlParams.get('id');
+    const courseName = urlParams.get('name');
+
+    if (courseId) {
+        document.getElementById('courseId').textContent = courseId;
+    }
+    if (courseName) {
+        document.getElementById('courseName').textContent = decodeURIComponent(courseName);
+    }
+</script>
+</body>
+</html>
