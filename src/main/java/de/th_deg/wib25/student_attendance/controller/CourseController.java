@@ -1,5 +1,5 @@
 
-package your.package.controller;
+package de.th_deg.wib25.student_attendance.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
