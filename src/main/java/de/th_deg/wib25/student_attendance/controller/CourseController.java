@@ -6,6 +6,7 @@ import org.springframework. ui.Model;
 import org. springframework.web.bind.annotation. GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -23,11 +24,12 @@ public class CourseController {
         return "courses"; // -> templates/courses. html
     }
 
-    @GetMapping("/detail")
-    public String courseDetail(@RequestParam Long id, @RequestParam String name, Model model) {
+    @GetMapping("/{id}")
+    public String courseDetail(@PathVariable Long id, Model model) {
+        // Hier Kurs aus DB holen (später, wenn Daten existieren)
         model.addAttribute("courseId", id);
-        model.addAttribute("courseName", name);
-        return "course-detail"; // -> templates/course-detail.html
+        model.addAttribute("courseName", "Test Kurs");
+        return "course-detail";
     }
 
     public record CourseDto(Long id, String name, String term) {}
