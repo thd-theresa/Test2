@@ -12,7 +12,7 @@
             background-color: #f5f5f5;
         }
 
-        . back-button {
+        .back-button {
             background-color: #6c757d;
             color: white;
             border: none;
@@ -30,7 +30,7 @@
             background-color: #545b62;
         }
 
-        . course-header {
+        .course-header {
             background-color: white;
             padding: 30px;
             border-radius:  5px;
@@ -141,6 +141,44 @@
         <h2>Materialien</h2>
         <p class="placeholder-text">Noch keine Materialien verfügbar</p>
     </div>
+
+    <div class="section">
+        <h2>Teilnehmer</h2>
+
+        <ul>
+            <li th:each="stu : ${students}">
+                <span th:text="${stu.firstName + ' ' + stu.lastName}">Max Mustermann</span>
+                (<span th:text="${stu.email}">max@example.com</span>)
+                <form th:action="@{|/courses/${courseId}/students/remove|}" method="post" style="display:inline;">
+                    <input type="hidden" name="studentId" th:value="${stu.id}"/>
+                    <button type="submit" class="back-button" style="background-color:#dc3545;">Entfernen</button>
+                </form>
+            </li>
+        </ul>
+        <p th:if="${studentCount == 0}" class="placeholder-text">Noch keine Teilnehmer</p>
+
+        <hr style="margin:16px 0;"/>
+
+        <h3>Teilnehmer hinzufügen</h3>
+
+        <!-- Einfache Suche -->
+        <form th:action="@{|/courses/${courseId}|}" method="get" style="margin-bottom: 10px;">
+            <input type="text" name="q" th:value="${query}" placeholder="Suche nach Name oder E-Mail…" class="input"/>
+            <button type="submit" class="back-button">Suchen</button>
+        </form>
+
+        <!-- Dropdown + Hinzufügen -->
+        <form th:action="@{|/courses/${courseId}/students/add|}" method="post">
+            <select name="studentId" class="input" required>
+                <option th:each="cand : ${candidateStudents}"
+                        th:value="${cand.id}"
+                        th:text="${cand.firstName + ' ' + cand.lastName + ' (' + cand.email + ')'}">
+                </option>
+            </select>
+            <button type="submit" class="back-button" style="background-color:#28a745;">Hinzufügen</button>
+        </form>
+    </div>
+
 </div>
 </body>
 </html>

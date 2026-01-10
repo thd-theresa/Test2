@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Finde alle Studenten
     List<User> findByRole(String role);
     // Finde Student per Matrikelnummer
-    Optional<User> findByMatriculationNumber(String matriculationNumber);
+    Optional<User> findByMatriculationNumber(Long matriculationNumber);
     // Prüfe ob Email existiert
     boolean existsByEmail(String email);
 }
