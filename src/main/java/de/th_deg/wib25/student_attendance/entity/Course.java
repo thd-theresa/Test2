@@ -1,8 +1,6 @@
 package de.th_deg.wib25.student_attendance.entity;
 
 import jakarta.persistence.*;
-import tools.jackson.databind.deser.jdk.StringArrayDeserializer;
-
 import java.util.ArrayList;
 import java.util.List;
 
