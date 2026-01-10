@@ -28,7 +28,7 @@
             background-color: #007bff;
             color: white;
             border: none;
-            padding:  10px 20px;
+            padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
@@ -39,7 +39,8 @@
             background-color: #0056b3;
         }
 
-        button. secondary {
+        /* Fix: ohne Leerzeichen */
+        button.secondary {
             background-color: #6c757d;
         }
 
@@ -86,14 +87,16 @@
             font-weight: 500;
         }
 
-        . course-link:hover {
+        /* Fix: ohne Leerzeichen */
+        .course-link:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-<h1>Deine Kurse</h1>
+
+<h1>Deine Kurse werden hier angezeigt</h1>
 
 <div class="button-container">
     <button onclick="neuerKurs()">Kurs anlegen</button>
@@ -101,6 +104,11 @@
     <button class="secondary" onclick="abmelden()">Abmelden</button>
     <button class="secondary" onclick="hilfe()">Hilfe</button>
     <button class="secondary" onclick="suchen()">Suchen</button>
+
+    <button class="secondary" onclick="window.location.href='/admin/users'">
+        User anlegen / verwalten
+    </button>
+
 </div>
 
 <table>
@@ -117,9 +125,10 @@
         <td th:text="${c.id}">1</td>
         <td>
             <a th:href="@{/courses/{id}(id=${c.id})}"
-               th:text="${c. name}"
+               th:text="${c.name}"
                class="course-link">Beispielkurs</a>
         </td>
+        <!-- Hinweis: Hier wird 'term' genutzt, weil CourseDto term hat -->
         <td th:text="${c.term}">WS 25/26</td>
     </tr>
     </tbody>
