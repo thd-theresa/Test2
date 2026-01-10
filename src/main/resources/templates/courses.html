@@ -129,14 +129,14 @@
                class="course-link">Beispielkurs</a>
         </td>
         <!-- Hinweis: Hier wird 'term' genutzt, weil CourseDto term hat -->
-        <td th:text="${c.term}">WS 25/26</td>
+        <td th:text="${c.semester}">WS 25/26</td>
     </tr>
     </tbody>
 </table>
 
 <script>
     function neuerKurs() {
-        alert('Funktion "Kurs anlegen" wird noch implementiert');
+        window.location.href = '/courses/new';
     }
 
     function kursSortieren() {
