@@ -39,20 +39,49 @@ public class CourseController {
 
     /**
      * Kursübersicht
-     * Zeigt IMMER die hartkodierten Demo-Kurse,
-     * damit sie unabhängig vom DB-Zustand sichtbar sind.
+     * zeigt echte Kurse aus der Datenbank an
      */
     @GetMapping({"", "/"})
     public String listCourses(Model model) {
-        List<CourseDto> courses = List.of(
-                new CourseDto(1L, "Software Engineering", "WS 25/26"),
-                new CourseDto(2L, "Datenbanken", "WS 25/26"),
-                // ggf. weitere Demo-Kurse hier ergänzen
-                new CourseDto(3L, "Wissenschaftliches Arbeiten", "WS 25/26")
-        );
+        List<Course> courses = courseRepository.findAll();
         model.addAttribute("courses", courses);
-        return "courses"; // -> templates/courses.html (nutzt CourseDto-Felder)
+        return "courses"; // -> templates/courses.html
     }
+
+    /**
+     * Formular zum Anlegen eines neuen Kurses
+     */
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("course", new Course());
+
+        // Professoren für Dropdown laden
+        List<User> professors = userRepository.findByRole("PROFESSOR");
+        model.addAttribute("professors", professors);
+
+        return "course-form"; // -> templates/course-form. html
+    }
+
+    /**
+     * Kurs speichern (POST)
+     */
+    @PostMapping
+    public String createCourse(@ModelAttribute Course course,
+                               @RequestParam(required = false) Long professorId) {
+
+        // Professor zuweisen (falls ausgewählt)
+        if (professorId != null) {
+            User professor = userRepository.findById(professorId)
+                    . orElseThrow(() -> new RuntimeException("Professor nicht gefunden"));
+            course.setProfessor(professor);
+        }
+
+        courseRepository.save(course);
+
+        // Zurück zur Kursliste
+        return "redirect:/courses";
+    }
+
 
     /**
      * Kursdetails + Teilnehmerverwaltung (Anzeige)
@@ -120,6 +149,6 @@ public class CourseController {
 
     /**
      * Kursliste-DTO (hartkodierte Demoobjekte)
-     */
     public record CourseDto(Long id, String name, String term) {}
+    */
 }
