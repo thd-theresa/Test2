@@ -99,15 +99,17 @@
 </head>
 
 <body>
-<div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <a href="/courses" class="btn-back">← Zurück zur Übersicht</a>
+<div style="display: flex; gap: 15px; margin-bottom: 40px;">
+    <button onclick="window.location.href='/courses'" style="background-color: #6c757d; color: white; border: none; padding: 14px 28px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+        ← Zurück zur Übersicht
+    </button>
 
     <form th:action="@{/courses/{id}/delete(id=${courseId})}"
           method="post"
           onsubmit="return confirm('Kurs wirklich löschen?  Diese Aktion kann nicht rückgängig gemacht werden!');"
-          style="margin:  0;">
-        <button type="submit" class="btn-delete" style="background-color: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-            🗑️ Kurs löschen
+          style="margin:  0; margin-left: auto;">
+        <button type="submit" style="background-color: #dc3545; color: white; border:  none; padding: 14px 28px; border-radius: 5px; cursor: pointer; font-size: 16px;">
+            Kurs löschen
         </button>
     </form>
 </div>
@@ -151,8 +153,8 @@
     </div>
 
     <div class="section">
-        <h2>Materialien</h2>
-        <p class="placeholder-text">Noch keine Materialien verfügbar</p>
+        <h2>Absenzen</h2>
+        <p class="placeholder-text">Noch keine Absenzen verfügbar</p>
     </div>
 
     <div class="section">

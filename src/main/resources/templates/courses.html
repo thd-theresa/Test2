@@ -19,19 +19,19 @@
         }
 
         .button-container {
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
 
         button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 14px 18px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             transition: background-color 0.3s;
         }
 
@@ -63,7 +63,7 @@
         }
 
         th, td {
-            padding: 12px 15px;
+            padding: 18px 15px;
             text-align: left;
         }
 
@@ -96,19 +96,19 @@
 
 <body>
 
-<h1>Deine Kurse werden hier angezeigt</h1>
+<h1>Willkommen zurück im Dashboard!</h1>
 
 <div class="button-container">
-    <button onclick="neuerKurs()">Kurs anlegen</button>
+    <button class="secondary" onclick="neuerKurs()">Kurs anlegen</button>
     <button class="secondary" onclick="kursSortieren()">Kurse sortieren</button>
-    <button class="secondary" onclick="abmelden()">Abmelden</button>
-    <button class="secondary" onclick="hilfe()">Hilfe</button>
-    <button class="secondary" onclick="suchen()">Suchen</button>
-
     <button class="secondary" onclick="window.location.href='/admin/users'">
         User anlegen / verwalten
     </button>
 
+    <!-- Ab hier rechts ausgerichtet -->
+    <button class="secondary" onclick="suchen()" style="margin-left: auto;">Suchen</button>
+    <button class="secondary" onclick="hilfe()">Hilfe</button>
+    <button class="secondary" onclick="abmelden()">Abmelden</button>
 </div>
 
 <table>
