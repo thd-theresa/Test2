@@ -149,7 +149,19 @@ public class CourseController {
     }
 
     /**
-     * Kursliste-DTO (hartkodierte Demoobjekte)
-    public record CourseDto(Long id, String name, String term) {}
-    */
+     * Kurs löschen (POST)
+     */
+    @PostMapping("/{id}/delete")
+    public String deleteCourse(@PathVariable Long id) {
+        // Prüfen ob Kurs existiert
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Kurs nicht gefunden"));
+
+        // Kurs löschen
+        courseRepository.delete(course);
+
+        // Zurück zur Kursliste
+        return "redirect:/courses";
+    }
+
 }
