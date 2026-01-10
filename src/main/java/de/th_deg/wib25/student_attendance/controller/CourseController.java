@@ -95,6 +95,7 @@ public class CourseController {
 
         model.addAttribute("courseId", id);
         model.addAttribute("courseName", course != null ? course.getName() : "Test Kurs");
+        model.addAttribute("description", course != null ? course.getDescription() : null);
 
         // Teilnehmerliste
         List<User> students = (course != null) ? course.getStudents() : List.of();
