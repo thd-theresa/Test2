@@ -131,9 +131,11 @@
 
     <div class="section">
         <h2>Beschreibung</h2>
-        <p class="placeholder-text">
-            Hier könnte die Kursbeschreibung stehen. In diesem Kurs werden die Grundlagen
-            vermittelt und praktische Übungen durchgeführt.
+        <p th:if="${description != null and ! description.isBlank()}" th:text="${description}">
+            Platzhalter für Beschreibung
+        </p>
+        <p th:if="${description == null or description.isBlank()}" class="placeholder-text">
+            Keine Beschreibung vorhanden.
         </p>
     </div>
 
