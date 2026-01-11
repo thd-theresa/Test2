@@ -34,10 +34,63 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-        logger.info("=== DataInitializer wird gestartet ===");
+        logger.warn("=".repeat(80));
+        logger.warn("=== DataInitializer wird gestartet ===");
+        logger.warn("=".repeat(80));
+        
+        // Teste PasswordEncoder
+        String testPassword = "test123";
+        String testEncoded = passwordEncoder.encode(testPassword);
+        boolean testMatches = passwordEncoder.matches(testPassword, testEncoded);
+        logger.warn("PasswordEncoder Test: password='{}', encoded='{}', matches={}",
+                testPassword, testEncoded.substring(0, 20) + "...", testMatches);
+        
         createAdminAccountIfNotExists(); // Admin 1: Zufälliges Passwort
         createSecondAdminAccountIfNotExists(); // Admin 2: Festes Passwort
-        logger.info("=== DataInitializer abgeschlossen ===");
+        
+        // Verifiziere beide Accounts in DB
+        verifyAdminAccounts();
+        
+        logger.warn("=".repeat(80));
+        logger.warn("=== DataInitializer abgeschlossen ===");
+        logger.warn("=".repeat(80));
+    }
+
+    private void verifyAdminAccounts() {
+        logger.warn("--- Verifiziere Admin-Accounts in Datenbank ---");
+        
+        var admin1 = userRepository.findByEmail(ADMIN_EMAIL);
+        if (admin1.isPresent()) {
+            User u = admin1.get();
+            logger.warn("Admin 1 gefunden: email={}, role={}, password_prefix={}",
+                    u.getEmail(), u.getRole(), u.getPassword().substring(0, 20));
+            
+            // Teste ob gespeichertes Passwort mit einem Testpasswort übereinstimmt
+            // (nur für debugging - in Produktion nicht machen!)
+        } else {
+            logger.error("FEHLER: Admin 1 nicht in Datenbank gefunden!");
+        }
+        
+        var admin2 = userRepository.findByEmail(ADMIN2_EMAIL);
+        if (admin2.isPresent()) {
+            User u = admin2.get();
+            logger.warn("Admin 2 gefunden: email={}, role={}, password_prefix={}",
+                    u.getEmail(), u.getRole(), u.getPassword().substring(0, 20));
+            
+            // Teste ob das feste Passwort funktioniert
+            boolean passwordMatches = passwordEncoder.matches(ADMIN2_PASSWORD, u.getPassword());
+            logger.warn("Admin 2 Passwort-Test: expected='{}', matches={}",
+                    ADMIN2_PASSWORD, passwordMatches);
+            
+            if (!passwordMatches) {
+                logger.error("FEHLER: Admin 2 Passwort stimmt nicht überein! Aktualisiere...");
+                u.setPassword(passwordEncoder.encode(ADMIN2_PASSWORD));
+                userRepository.save(u);
+                logger.warn("Admin 2 Passwort wurde neu kodiert und gespeichert.");
+            }
+        } else {
+            logger.error("FEHLER: Admin 2 nicht in Datenbank gefunden!");
+        }
     }
 
     private void createAdminAccountIfNotExists() {
@@ -104,25 +157,22 @@ public class DataInitializer {
         if (existingAdmin2.isPresent()) {
             User admin2 = existingAdmin2.get();
             
-            // Prüfe ob Passwort korrekt ist, aktualisiere wenn nötig
-            if (!isBCryptEncoded(admin2.getPassword())) {
-                logger.warn("Admin2-Account existiert, aber Passwort ist nicht BCrypt-kodiert.");
-                logger.warn("Aktualisiere Admin2-Account mit festem Passwort...");
-                
-                String encodedPassword = passwordEncoder.encode(ADMIN2_PASSWORD);
-                admin2.setPassword(encodedPassword);
-                userRepository.save(admin2);
-                
-                logger.warn("=".repeat(80));
-                logger.warn("ADMIN2-ACCOUNT AKTUALISIERT");
-                logger.warn("=".repeat(80));
-                logger.warn("Email: {}", ADMIN2_EMAIL);
-                logger.warn("Passwort: {} (FESTES PASSWORT)", ADMIN2_PASSWORD);
-                logger.warn("Rolle: {}", ADMIN_ROLE);
-                logger.warn("=".repeat(80));
-            } else {
-                logger.info("Admin2-Account existiert bereits mit gültigem BCrypt-Passwort.");
-            }
+            // IMMER das Passwort aktualisieren um sicherzustellen, dass es korrekt ist
+            logger.warn("Admin2-Account existiert. Stelle sicher, dass Passwort korrekt ist...");
+            
+            String encodedPassword = passwordEncoder.encode(ADMIN2_PASSWORD);
+            admin2.setPassword(encodedPassword);
+            admin2.setRole(ADMIN_ROLE); // Stelle sicher, dass Rolle korrekt ist
+            userRepository.save(admin2);
+            
+            logger.warn("=".repeat(80));
+            logger.warn("ADMIN2-ACCOUNT AKTUALISIERT/VERIFIZIERT");
+            logger.warn("=".repeat(80));
+            logger.warn("Email: {}", ADMIN2_EMAIL);
+            logger.warn("Passwort: {} (FESTES PASSWORT)", ADMIN2_PASSWORD);
+            logger.warn("Rolle: {}", ADMIN_ROLE);
+            logger.warn("Password-Hash (erste 30 Zeichen): {}", encodedPassword.substring(0, 30) + "...");
+            logger.warn("=".repeat(80));
             return;
         }
 
@@ -145,6 +195,7 @@ public class DataInitializer {
         logger.warn("Email: {}", ADMIN2_EMAIL);
         logger.warn("Passwort: {} (FESTES PASSWORT)", ADMIN2_PASSWORD);
         logger.warn("Rolle: {}", ADMIN_ROLE);
+        logger.warn("Password-Hash (erste 30 Zeichen): {}", encodedPassword.substring(0, 30) + "...");
         logger.warn("=".repeat(80));
         logger.warn("DIESER ACCOUNT HAT EIN FESTES PASSWORT FÜR EINFACHE ANMELDUNG!");
         logger.warn("=".repeat(80));
