@@ -38,6 +38,8 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
             
             // Log the password to console (only on first startup)
+            // WARNING: Password is printed to console for initial setup only.
+            // In production environments, ensure console logs are secured and not persistent.
             System.out.println("=".repeat(80));
             System.out.println("INITIAL ADMIN ACCOUNT CREATED");
             System.out.println("=".repeat(80));
@@ -49,6 +51,19 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
+    /**
+     * Generates a cryptographically secure random password.
+     * 
+     * Password requirements:
+     * - Contains at least one uppercase letter
+     * - Contains at least one lowercase letter
+     * - Contains at least one digit
+     * - Contains at least one special character
+     * - Characters are randomly shuffled to ensure unpredictability
+     * 
+     * @param length The desired length of the password (minimum 4)
+     * @return A secure random password meeting all requirements
+     */
     private String generateSecurePassword(int length) {
         String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lowerCase = "abcdefghijklmnopqrstuvwxyz";
