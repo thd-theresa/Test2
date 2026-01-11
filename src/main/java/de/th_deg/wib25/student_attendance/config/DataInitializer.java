@@ -19,11 +19,13 @@ public class DataInitializer {
     private static final String ADMIN_ROLE = "PROFESSOR";  // Role für Dozenten
     private static final int PASSWORD_LENGTH = 16; // Länge des zufälligen Passworts
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder; // Verschlüsselt Passwörter sicher
+    public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    } // Verschlüsselt Passwörter sicher
 
     @PostConstruct
     public void init() {
