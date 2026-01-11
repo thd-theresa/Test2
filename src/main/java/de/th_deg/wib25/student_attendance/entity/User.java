@@ -23,7 +23,7 @@ public class User {
     @Column(nullable = false)
     private String role; //Student, Dozent oder Admin
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long matriculationNumber;
 
     // Konstruktor
