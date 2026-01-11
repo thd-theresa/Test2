@@ -97,10 +97,14 @@
 <div class="container">
   <h1>Login</h1>
 
-  <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-  <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+  <div th:if="${param.error}" class="alert alert-error">
+    Ungültige E-Mail oder Passwort.
+  </div>
+  <div th:if="${param.logout}" class="alert alert-success">
+    Sie wurden erfolgreich abgemeldet.
+  </div>
 
-  <form action="/login" method="post">
+  <form th:action="@{/login}" method="post">
     <div class="form-group">
       <label for="email">E-Mail:</label>
       <input type="email" id="email" name="email" required>
@@ -116,7 +120,6 @@
 
   <div class="link-group">
     <p>Noch kein Account? <a href="/register">Jetzt registrieren</a></p>
-    <p><a href="/">Zurück zur Startseite</a></p>
   </div>
 </div>
 </body>
