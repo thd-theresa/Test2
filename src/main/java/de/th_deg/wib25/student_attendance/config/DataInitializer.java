@@ -68,24 +68,16 @@ public class DataInitializer {
     }
 
     private String generateSecurePassword() {
-        byte[] passwordBytes = new byte[PASSWORD_LENGTH];
+        // Base64 encoding produces ~1.33x the input length, so we need more bytes
+        int bytesNeeded = (PASSWORD_LENGTH * 3 / 4) + 1;
+        byte[] passwordBytes = new byte[bytesNeeded];
         SECURE_RANDOM.nextBytes(passwordBytes);
 
         String base64Password = Base64.getUrlEncoder()
                 .withoutPadding()
                 .encodeToString(passwordBytes);
 
-        if (base64Password.length() >= PASSWORD_LENGTH) {
-            return base64Password.substring(0, PASSWORD_LENGTH); //Kürzt Passwort auf gewünschte Länge
-        } else {
-            // Falls string zu kurz ist, nur fehlende Bytes generieren
-            int missingBytes = PASSWORD_LENGTH - base64Password.length();
-            byte[] additionalBytes = new byte[missingBytes];
-            SECURE_RANDOM.nextBytes(additionalBytes);
-            String additionalPassword = Base64.getUrlEncoder()
-                    .withoutPadding()
-                    .encodeToString(additionalBytes);
-            return base64Password + additionalPassword.substring(0, missingBytes);
-        }
+        // Ensure we always have enough characters
+        return base64Password.substring(0, Math.min(PASSWORD_LENGTH, base64Password.length()));
     }
 }
