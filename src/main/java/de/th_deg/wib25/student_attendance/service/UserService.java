@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService implements UserDetailsService {
 
+    private static final String ROLE_DOZENT = "DOZENT";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -44,12 +46,12 @@ public class UserService implements UserDetailsService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setRole(role);
-        user.setMatriculationNumber(0L);  // Admin braucht keine Matrikelnummer
+        user.setMatriculationNumber(0L);  // Admin benötigt keine Matrikelnummer
 
         return userRepository.save(user);
     }
 
     public boolean adminExists() {
-        return !userRepository.findByRole("DOZENT").isEmpty();
+        return !userRepository.findByRole(ROLE_DOZENT).isEmpty();
     }
 }

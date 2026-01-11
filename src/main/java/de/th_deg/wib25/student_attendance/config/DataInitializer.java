@@ -14,6 +14,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
     private static final String ADMIN_EMAIL = "admin@student-attendance.de";
+    private static final String ROLE_DOZENT = "DOZENT";
     private static final int PASSWORD_LENGTH = 16;
 
     private final UserService userService;
@@ -38,7 +39,7 @@ public class DataInitializer implements CommandLineRunner {
                     randomPassword,
                     "System",
                     "Administrator",
-                    "DOZENT"
+                    ROLE_DOZENT
             );
 
             logger.info("===============================================");
@@ -61,10 +62,10 @@ public class DataInitializer implements CommandLineRunner {
         byte[] bytes = new byte[PASSWORD_LENGTH];
         random.nextBytes(bytes);
         
-        // Base64-Kodierung für ein lesbares, aber sicheres Passwort
+        // Base64-Kodierung für ein lesbares und sicheres Passwort
         String password = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         
         // Auf gewünschte Länge kürzen
-        return password.substring(0, PASSWORD_LENGTH);
+        return password.substring(0, Math.min(password.length(), PASSWORD_LENGTH));
     }
 }

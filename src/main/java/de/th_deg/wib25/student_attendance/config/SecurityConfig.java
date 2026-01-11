@@ -28,7 +28,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        . anyRequest().authenticated()  //  Alle Seiten benötigen Authentifizierung
+                        .anyRequest().authenticated()  //  Alle Seiten benötigen Authentifizierung
                 )
                 .formLogin(form -> form
                         .permitAll()  //  Login-Seite für alle zugänglich
