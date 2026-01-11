@@ -78,10 +78,13 @@ public class DataInitializer {
         if (base64Password.length() >= PASSWORD_LENGTH) {
             return base64Password.substring(0, PASSWORD_LENGTH); //Kürzt Passwort auf gewünschte Länge
         } else {
-            return base64Password + Base64.getUrlEncoder() // Falls string zu kurz ist
+            // Falls string zu kurz ist, neue Bytes generieren
+            byte[] additionalBytes = new byte[PASSWORD_LENGTH];
+            random.nextBytes(additionalBytes);
+            String additionalPassword = Base64.getUrlEncoder()
                     .withoutPadding()
-                    .encodeToString(random.generateSeed(PASSWORD_LENGTH))
-                    .substring(0, PASSWORD_LENGTH - base64Password.length());
+                    .encodeToString(additionalBytes);
+            return (base64Password + additionalPassword).substring(0, PASSWORD_LENGTH);
         }
     }
 }
