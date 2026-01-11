@@ -3,6 +3,7 @@ package de.th_deg.wib25.student_attendance.controller;
 
 import de.th_deg.wib25.student_attendance.entity.User;
 import de.th_deg.wib25.student_attendance.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +15,11 @@ import java.util.List;
 public class UserAdminController {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserAdminController(UserRepository userRepository) {
+    public UserAdminController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -36,8 +39,9 @@ public class UserAdminController {
             model.addAttribute("error", "E-Mail existiert bereits.");
             return "admin/users";
         }
-        // Hinweis: Du hast Security deaktiviert; falls du Passwörter hashen willst,
-        // kannst du hier später BCrypt verwenden.
+        // Encode password before saving
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        
         if (!"STUDENT".equalsIgnoreCase(newUser.getRole()) && newUser.getMatriculationNumber() == null) {
             newUser.setMatriculationNumber(0L);
         }
