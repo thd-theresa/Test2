@@ -5,7 +5,6 @@ import de.th_deg.wib25.student_attendance.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import java.security.SecureRandom;
@@ -18,16 +17,24 @@ public class DataInitializer {
     private static final String ADMIN_EMAIL = "admin@th-deg.de"; //Feste Admin-Email
     private static final String ADMIN_ROLE = "PROFESSOR";  // Role für Dozenten
     private static final int PASSWORD_LENGTH = 16; // Länge des zufälligen Passworts
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom(); // Wiederverwendbarer Zufallsgenerator
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder; // Verschlüsselt Passwörter sicher
+    public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    } // Verschlüsselt Passwörter sicher
 
     @PostConstruct
     public void init() {
-        createAdminAccountIfNotExists(); // erstellt einen Admin falls noch keiner existiert wird automatisch ausgeführt
+        try {
+            createAdminAccountIfNotExists(); // erstellt einen Admin falls noch keiner existiert wird automatisch ausgeführt
+        } catch (Exception e) {
+            logger.error("Fehler beim Erstellen des Admin-Accounts: {}", e.getMessage(), e);
+            // Nicht neu werfen, damit die Anwendung trotzdem startet
+        }
     }
 
     private void createAdminAccountIfNotExists() {
@@ -61,21 +68,17 @@ public class DataInitializer {
     }
 
     private String generateSecurePassword() {
-        SecureRandom random = new SecureRandom(); // Zufallsgenerator
-        byte[] passwordBytes = new byte[PASSWORD_LENGTH];
-        random.nextBytes(passwordBytes);
+        // Base64 encoding: 3 bytes -> 4 characters, so for PASSWORD_LENGTH chars we need:
+        // ceil(PASSWORD_LENGTH * 3 / 4) bytes, adding 1 for safety
+        int bytesNeeded = ((PASSWORD_LENGTH * 3) + 3) / 4;
+        byte[] passwordBytes = new byte[bytesNeeded];
+        SECURE_RANDOM.nextBytes(passwordBytes);
 
         String base64Password = Base64.getUrlEncoder()
                 .withoutPadding()
                 .encodeToString(passwordBytes);
 
-        if (base64Password.length() >= PASSWORD_LENGTH) {
-            return base64Password.substring(0, PASSWORD_LENGTH); //Kürzt Passwort auf gewünschte Länge
-        } else {
-            return base64Password + Base64.getUrlEncoder() // Falls string zu kurz ist
-                    .withoutPadding()
-                    .encodeToString(random.generateSeed(PASSWORD_LENGTH))
-                    .substring(0, PASSWORD_LENGTH - base64Password.length());
-        }
+        // Truncate to exact length (should always have enough characters)
+        return base64Password.substring(0, PASSWORD_LENGTH);
     }
 }

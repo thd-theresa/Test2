@@ -13,6 +13,9 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
+# Install wget for healthcheck
+RUN apk add --no-cache wget
+
 COPY --from=builder /build/target/*.jar app.jar
 
 RUN mkdir -p /app/data
