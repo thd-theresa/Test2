@@ -10,6 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class AuthController {
 
+    private static final int MIN_PASSWORD_LENGTH = 6;
+    private static final String PROFESSOR_ROLE = "PROFESSOR";
+    private static final String STUDENT_ROLE = "STUDENT";
+    private static final String PROFESSOR_EMAIL_DOMAIN = "@th-deg.de";
+
     private final UserService userService;
 
     public AuthController(UserService userService) {
@@ -48,19 +53,19 @@ public class AuthController {
                           Model model) {
         try {
             // Validate password length
-            if (password.length() < 6) {
-                model.addAttribute("error", "Passwort muss mindestens 6 Zeichen lang sein");
+            if (password.length() < MIN_PASSWORD_LENGTH) {
+                model.addAttribute("error", "Passwort muss mindestens " + MIN_PASSWORD_LENGTH + " Zeichen lang sein");
                 return "register";
             }
 
             // Validate professor email domain
-            if ("PROFESSOR".equals(role) && !email.endsWith("@th-deg.de")) {
-                model.addAttribute("error", "Dozenten müssen eine @th-deg.de E-Mail-Adresse verwenden");
+            if (PROFESSOR_ROLE.equals(role) && !email.endsWith(PROFESSOR_EMAIL_DOMAIN)) {
+                model.addAttribute("error", "Dozenten müssen eine " + PROFESSOR_EMAIL_DOMAIN + " E-Mail-Adresse verwenden");
                 return "register";
             }
 
             // Validate student has matriculation number
-            if ("STUDENT".equals(role) && matriculationNumber == null) {
+            if (STUDENT_ROLE.equals(role) && matriculationNumber == null) {
                 model.addAttribute("error", "Studenten müssen eine Matrikelnummer angeben");
                 return "register";
             }

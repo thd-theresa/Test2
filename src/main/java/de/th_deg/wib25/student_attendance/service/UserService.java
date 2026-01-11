@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
+    private static final String PROFESSOR_ROLE = "PROFESSOR";
+    private static final String PROFESSOR_EMAIL_DOMAIN = "@th-deg.de";
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -23,8 +26,8 @@ public class UserService {
         }
 
         // Validate email domain for professors
-        if ("PROFESSOR".equals(role) && !email.endsWith("@th-deg.de")) {
-            throw new IllegalArgumentException("Professors must use @th-deg.de email address");
+        if (PROFESSOR_ROLE.equals(role) && !email.endsWith(PROFESSOR_EMAIL_DOMAIN)) {
+            throw new IllegalArgumentException("Professors must use " + PROFESSOR_EMAIL_DOMAIN + " email address");
         }
 
         // Create new user
