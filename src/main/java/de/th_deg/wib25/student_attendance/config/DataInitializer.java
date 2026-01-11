@@ -31,9 +31,21 @@ public class DataInitializer {
     }
 
     private void createAdminAccountIfNotExists() {
-        if (userRepository.existsByEmail(ADMIN_EMAIL)) {
-            logger.info("Admin-Account existiert bereits. Keine Initialisierung erforderlich.");
-            return; // Prüft ob Admin schon existiert und beendet die Methode, falls ein Admin schon existiert
+        // Prüfe ob Admin existiert
+        var existingAdmin = userRepository.findByEmail(ADMIN_EMAIL);
+        
+        if (existingAdmin.isPresent()) {
+            User admin = existingAdmin.get();
+            // Prüfe ob Passwort BCrypt-kodiert ist (beginnt mit $2a$ oder $2b$)
+            if (admin.getPassword() == null || 
+                (!admin.getPassword().startsWith("$2a$") && !admin.getPassword().startsWith("$2b$"))) {
+                logger.warn("Admin-Account existiert, aber Passwort ist nicht BCrypt-kodiert.");
+                logger.warn("Lösche und erstelle Admin-Account neu...");
+                userRepository.delete(admin);
+            } else {
+                logger.info("Admin-Account existiert bereits. Keine Initialisierung erforderlich.");
+                return;
+            }
         }
 
         String randomPassword = generateSecurePassword(); // erzeugt zufälliges Passwort
