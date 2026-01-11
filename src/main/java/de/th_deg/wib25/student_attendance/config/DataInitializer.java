@@ -17,6 +17,7 @@ public class DataInitializer {
     private static final String ADMIN_EMAIL = "admin@th-deg.de"; //Feste Admin-Email
     private static final String ADMIN_ROLE = "PROFESSOR";  // Role für Dozenten
     private static final int PASSWORD_LENGTH = 16; // Länge des zufälligen Passworts
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom(); // Wiederverwendbarer Zufallsgenerator
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -67,9 +68,8 @@ public class DataInitializer {
     }
 
     private String generateSecurePassword() {
-        SecureRandom random = new SecureRandom(); // Zufallsgenerator
         byte[] passwordBytes = new byte[PASSWORD_LENGTH];
-        random.nextBytes(passwordBytes);
+        SECURE_RANDOM.nextBytes(passwordBytes);
 
         String base64Password = Base64.getUrlEncoder()
                 .withoutPadding()
@@ -78,13 +78,14 @@ public class DataInitializer {
         if (base64Password.length() >= PASSWORD_LENGTH) {
             return base64Password.substring(0, PASSWORD_LENGTH); //Kürzt Passwort auf gewünschte Länge
         } else {
-            // Falls string zu kurz ist, neue Bytes generieren
-            byte[] additionalBytes = new byte[PASSWORD_LENGTH];
-            random.nextBytes(additionalBytes);
+            // Falls string zu kurz ist, nur fehlende Bytes generieren
+            int missingBytes = PASSWORD_LENGTH - base64Password.length();
+            byte[] additionalBytes = new byte[missingBytes];
+            SECURE_RANDOM.nextBytes(additionalBytes);
             String additionalPassword = Base64.getUrlEncoder()
                     .withoutPadding()
                     .encodeToString(additionalBytes);
-            return (base64Password + additionalPassword).substring(0, PASSWORD_LENGTH);
+            return base64Password + additionalPassword.substring(0, missingBytes);
         }
     }
 }
