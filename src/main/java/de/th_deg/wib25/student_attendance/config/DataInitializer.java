@@ -28,7 +28,12 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-        createAdminAccountIfNotExists(); // erstellt einen Admin falls noch keiner existiert wird automatisch ausgeführt
+        try {
+            createAdminAccountIfNotExists(); // erstellt einen Admin falls noch keiner existiert wird automatisch ausgeführt
+        } catch (Exception e) {
+            logger.error("Fehler beim Erstellen des Admin-Accounts: {}", e.getMessage(), e);
+            // Nicht neu werfen, damit die Anwendung trotzdem startet
+        }
     }
 
     private void createAdminAccountIfNotExists() {
