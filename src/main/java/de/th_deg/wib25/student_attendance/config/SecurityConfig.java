@@ -61,8 +61,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
-                )
-                .csrf(csrf -> csrf.disable());
+                );
 
         return http.build();
     }
