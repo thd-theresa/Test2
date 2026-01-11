@@ -36,18 +36,27 @@ public class DataInitializer {
         
         if (existingAdmin.isPresent()) {
             User admin = existingAdmin.get();
-            // Prüfe ob Passwort BCrypt-kodiert ist (beginnt mit $2a$, $2b$, $2x$ oder $2y$)
-            String password = admin.getPassword();
-            boolean isBCryptEncoded = password != null && 
-                (password.startsWith("$2a$") || 
-                 password.startsWith("$2b$") || 
-                 password.startsWith("$2x$") || 
-                 password.startsWith("$2y$"));
             
-            if (!isBCryptEncoded) {
+            if (!isBCryptEncoded(admin.getPassword())) {
                 logger.warn("Admin-Account existiert, aber Passwort ist nicht BCrypt-kodiert.");
-                logger.warn("Lösche und erstelle Admin-Account neu...");
-                userRepository.delete(admin);
+                logger.warn("Aktualisiere Admin-Account mit neuem Passwort...");
+                
+                // Generiere neues Passwort und aktualisiere bestehenden Account
+                String randomPassword = generateSecurePassword();
+                String encodedPassword = passwordEncoder.encode(randomPassword);
+                admin.setPassword(encodedPassword);
+                userRepository.save(admin);
+                
+                logger.warn("=".repeat(80));
+                logger.warn("ADMIN-ACCOUNT AKTUALISIERT");
+                logger.warn("=".repeat(80));
+                logger.warn("Email: {}", ADMIN_EMAIL);
+                logger.warn("Neues Passwort: {}", randomPassword);
+                logger.warn("Rolle: {}", ADMIN_ROLE);
+                logger.warn("=".repeat(80));
+                logger.warn("BITTE NOTIEREN SIE DAS NEUE PASSWORT!");
+                logger.warn("=".repeat(80));
+                return;
             } else {
                 logger.info("Admin-Account existiert bereits. Keine Initialisierung erforderlich.");
                 return;
@@ -76,6 +85,17 @@ public class DataInitializer {
         logger.warn("=".repeat(80));
         logger.warn("BITTE NOTIEREN SIE DAS PASSWORT - ES WIRD NICHT ERNEUT ANGEZEIGT!");
         logger.warn("=".repeat(80));
+    }
+
+    /**
+     * Prüft ob ein Passwort BCrypt-kodiert ist.
+     * BCrypt-Hashes beginnen mit $2a$, $2b$, $2x$ oder $2y$
+     */
+    private boolean isBCryptEncoded(String password) {
+        if (password == null) {
+            return false;
+        }
+        return password.matches("^\\$2[abxy]\\$\\d+\\$.+");
     }
 
     private String generateSecurePassword() {
