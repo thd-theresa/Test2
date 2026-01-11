@@ -82,7 +82,7 @@ public class DataInitializer {
         adminUser.setFirstName("System");
         adminUser.setLastName("Administrator");
         adminUser.setRole(ADMIN_ROLE);
-        adminUser.setMatriculationNumber(0L); // Admin hat keine Matrikelnummer
+        adminUser.setMatriculationNumber(-1L); // Admin hat negative Matrikelnummer (keine echte)
 
         userRepository.save(adminUser); // Speichere in Datenbank
 
@@ -135,7 +135,7 @@ public class DataInitializer {
         admin2User.setFirstName("Admin");
         admin2User.setLastName("Zwei");
         admin2User.setRole(ADMIN_ROLE);
-        admin2User.setMatriculationNumber(1L); // Unterschiedliche Matrikelnummer
+        admin2User.setMatriculationNumber(-2L); // Admin hat negative Matrikelnummer (keine echte)
 
         userRepository.save(admin2User);
 
