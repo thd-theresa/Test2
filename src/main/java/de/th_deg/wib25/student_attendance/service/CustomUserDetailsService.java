@@ -2,7 +2,6 @@ package de.th_deg.wib25.student_attendance.service;
 
 import de.th_deg.wib25.student_attendance.entity.User;
 import de.th_deg.wib25.student_attendance.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

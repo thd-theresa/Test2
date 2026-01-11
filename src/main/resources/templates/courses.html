@@ -144,7 +144,12 @@
     }
 
     function abmelden() {
-        window.location.href = '/logout';
+        // Create a form for POST logout to prevent CSRF attacks
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/logout';
+        document.body.appendChild(form);
+        form.submit();
     }
 
     function hilfe() {
