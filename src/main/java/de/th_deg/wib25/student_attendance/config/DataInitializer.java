@@ -36,9 +36,15 @@ public class DataInitializer {
         
         if (existingAdmin.isPresent()) {
             User admin = existingAdmin.get();
-            // Prüfe ob Passwort BCrypt-kodiert ist (beginnt mit $2a$ oder $2b$)
-            if (admin.getPassword() == null || 
-                (!admin.getPassword().startsWith("$2a$") && !admin.getPassword().startsWith("$2b$"))) {
+            // Prüfe ob Passwort BCrypt-kodiert ist (beginnt mit $2a$, $2b$, $2x$ oder $2y$)
+            String password = admin.getPassword();
+            boolean isBCryptEncoded = password != null && 
+                (password.startsWith("$2a$") || 
+                 password.startsWith("$2b$") || 
+                 password.startsWith("$2x$") || 
+                 password.startsWith("$2y$"));
+            
+            if (!isBCryptEncoded) {
                 logger.warn("Admin-Account existiert, aber Passwort ist nicht BCrypt-kodiert.");
                 logger.warn("Lösche und erstelle Admin-Account neu...");
                 userRepository.delete(admin);
