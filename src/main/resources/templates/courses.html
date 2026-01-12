@@ -101,7 +101,7 @@
 <div class="button-container">
     <button onclick="neuerKurs()">Kurs anlegen</button>
     <button class="secondary" onclick="kursSortieren()">Kurse sortieren</button>
-    <button class="secondary" onclick="abmelden()">Abmelden</button>
+    <button class="secondary" onclick="document.getElementById('logoutForm').submit()">Abmelden</button>
     <button class="secondary" onclick="hilfe()">Hilfe</button>
     <button class="secondary" onclick="suchen()">Suchen</button>
 
@@ -110,6 +110,8 @@
     </button>
 
 </div>
+
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;"></form>
 
 <table>
     <thead>
@@ -141,10 +143,6 @@
 
     function kursSortieren() {
         alert('Funktion "Kurse sortieren" wird noch implementiert');
-    }
-
-    function abmelden() {
-        alert('Funktion "Abmelden" wird noch implementiert');
     }
 
     function hilfe() {
